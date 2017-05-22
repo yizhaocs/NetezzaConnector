@@ -8,6 +8,8 @@ import java.sql.Statement;
 
 
 /**
+ * @author YI ZHAO[yizhao.cs@gmail.com]
+ *
  * build it:
  *      mvn clean package
  *
