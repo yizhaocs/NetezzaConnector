@@ -1,4 +1,4 @@
-/**
+package com.yizhao.apps; /**
  * Created by yzhao on 5/22/17.
  */
 import java.sql.DriverManager;
@@ -14,7 +14,7 @@ import java.sql.Statement;
  *      mvn clean package
  *
  * Run it:
- *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac
+ *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
  */
 public class NetezzaConnector {
     private static final String NETEZZA_DB_DRIVER = "org.netezza.Driver";
