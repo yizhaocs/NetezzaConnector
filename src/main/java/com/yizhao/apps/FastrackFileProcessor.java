@@ -23,8 +23,9 @@ public class FastrackFileProcessor {
 
 
     /**
-     * 20161497900101|25594|BOS|208642445203|3346|45815|2017-03-15 23:12
-     * 20161497900101|25595|FLL|208642445203|3346|45815|2017-03-15 23:12
+     * EKV row format:
+     *      20161497900101|25594|BOS|208642445203|3346|45815|2017-03-15 23:12
+     *      20161497900101|25595|FLL|208642445203|3346|45815|2017-03-15 23:12
      *
      * @param inFilePath
      */
@@ -69,34 +70,4 @@ public class FastrackFileProcessor {
         }
         return eventIdToData;
     }
-/*
-        FileReader in = null;
-        FileWriter out = null;
-        try {
-            in = new FileReader(inFilePath);
-            // When you're working with FileWriter you don't have to create the file first,
-            // you can simply start writing to it.
-            out = new FileWriter(outFilePath);
-            int i;
-            while ((i = in.read()) != -1) {
-                out.write(i);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Caught FileNotFoundException: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Caught IOException: " + e.getMessage());
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            }catch (IOException e){
-                System.out.println("Caught IOException: " + e.getMessage());
-            }
-        }
-
-        */
 }
