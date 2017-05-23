@@ -15,6 +15,10 @@ import java.sql.Statement;
  *
  * Run it:
  *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
+ *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 0
+ *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 1
+ *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 2
+ *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 9
  */
 public class NetezzaConnector {
     private static final String NETEZZA_DB_DRIVER = "org.netezza.Driver";
@@ -43,9 +47,9 @@ public class NetezzaConnector {
         String selectTableSQL = null;
 
         if(partition == null){
-             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' remoteSource 'JDBC') as select * from " + table;
+             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' escapechar '\\' remoteSource 'JDBC') as select * from " + table;
         }else{
-             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' remoteSource 'JDBC') as select * from " + table +
+             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' escapechar '\\' remoteSource 'JDBC') as select * from " + table +
                     "\n" +
                     "WHERE MOD(" + table + ".EVENT_ID, 10)=" + partition +
                     "\n" +
