@@ -12,21 +12,21 @@ import java.sql.Statement;
  * @author YI ZHAO[yizhao.cs@gmail.com]
  *         <p>
  *         build it:
- *         mvn clean package
+ *              mvn clean package
  *         <p>
  *         Run it:
- *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
- *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 0
- *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 1
- *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 2
- *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 9
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 0
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 1
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 2
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 9
  */
 public class NetezzaConnector {
     private static final String NETEZZA_DB_DRIVER = "org.netezza.Driver";
     private static final String DB_CONNECTION = "jdbc:netezza://nz-vip-nym1:5480/opinmind_dev";
     private static final String DB_USER = "opinmind_dev_admin";
     private static final String DB_PASSWORD = "29JWmn2e";
-    static boolean success = true;
+    private static boolean success = true;
 
     /**
      * @param argv
@@ -40,7 +40,6 @@ public class NetezzaConnector {
     }
 
     private static void dataToCsv(String table, String outputFilePath, String partition) throws SQLException {
-
         Connection dbConnection = null;
         Statement statement = null;
 
