@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 
 
 /**
@@ -15,13 +16,13 @@ import java.sql.Statement;
  *              mvn clean package
  *         <p>
  *         Run it:
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 0
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 1
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 2
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 9
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 0
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 1
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 2
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 9
  */
-public class NetezzaConnector {
+public class Main {
     private static final String NETEZZA_DB_DRIVER = "org.netezza.Driver";
     private static final String DB_CONNECTION = "jdbc:netezza://nz-vip-nym1:5480/opinmind_dev";
     private static final String DB_USER = "opinmind_dev_admin";
@@ -31,27 +32,47 @@ public class NetezzaConnector {
      * @param argv
      */
     public static void main(String[] argv) {
+        String table = null;
+        String csvFileOutputPath = null;
+        String fastrackFileOutputPath = null;
+        String partition = null;
         try {
-            dataToCsv(argv[0], argv[1], argv[2]);
+             table = argv[0];
+             csvFileOutputPath = argv[1];
+             fastrackFileOutputPath = argv[2];
+             partition = argv[3];
+
+            dataToCsv(table, csvFileOutputPath, partition);
         } catch (Exception e) {
             System.out.println("exception");
         }
+        if(csvFileOutputPath != null){
+           System.out.println("argument 2 is missing for csv file output path");
+            return;
+        }
+        if(fastrackFileOutputPath != null){
+            System.out.println("argument 3 is missing for fastrack file output path");
+            return;
+        }
+
+        Map<String, FastrackFileDao> eventIdToData =  FastrackFileProcessor.execute(csvFileOutputPath);
+        FastrackFileGenerator.execute(eventIdToData, fastrackFileOutputPath);
     }
 
-    private static void dataToCsv(String table, String outputFilePath, String partition) throws SQLException {
+    private static void dataToCsv(String table, String csvFileOutputPath, String partition) throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
 
         String selectTableSQL = null;
 
         if (partition == null) {
-            selectTableSQL = "create external table \'" + outputFilePath + "\'" +
+            selectTableSQL = "create external table \'" + csvFileOutputPath + "\'" +
                             "\n" +
                             "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
                             "\n" +
                             "as select * from " + table;
         } else {
-            selectTableSQL = "create external table \'" + outputFilePath + "\'" +
+            selectTableSQL = "create external table \'" + csvFileOutputPath + "\'" +
                     "\n" +
                     "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
                     "\n" +
@@ -59,7 +80,7 @@ public class NetezzaConnector {
                     "\n" +
                     "WHERE MOD(" + table + ".EVENT_ID, 10)=" + partition +
                     "\n" +
-                    "ORDER BY " + table + ".EVENT_ID";
+                    "ORDER BY " + table + ".EVENT_ID" + " LIMIT 1000";
         }
 
         try {
