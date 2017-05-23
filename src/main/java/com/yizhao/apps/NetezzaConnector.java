@@ -26,7 +26,6 @@ public class NetezzaConnector {
     private static final String DB_CONNECTION = "jdbc:netezza://nz-vip-nym1:5480/opinmind_dev";
     private static final String DB_USER = "opinmind_dev_admin";
     private static final String DB_PASSWORD = "29JWmn2e";
-    private static boolean success = true;
 
     /**
      * @param argv
@@ -46,7 +45,11 @@ public class NetezzaConnector {
         String selectTableSQL = null;
 
         if (partition == null) {
-            selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' escapechar '\\' remoteSource 'JDBC') as select * from " + table;
+            selectTableSQL = "create external table \'" + outputFilePath + "\'" +
+                            "\n" +
+                            "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
+                            "\n" +
+                            "as select * from " + table;
         } else {
             selectTableSQL = "create external table \'" + outputFilePath + "\'" +
                     "\n" +
@@ -63,16 +66,14 @@ public class NetezzaConnector {
             dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
 
-            System.out.println(selectTableSQL);
+            System.out.println("execute query: \n" + selectTableSQL);
 
             // execute select SQL stetement
-            success = statement.execute(selectTableSQL);
+            statement.execute(selectTableSQL);
         } catch (SQLException e) {
-            success = false;
-            System.out.println(e.getMessage());
+            System.out.println("Exception in dataToCsv:" + e.getMessage());
 
         } finally {
-            System.out.println("table dump success = " + success);
             if (statement != null) {
                 statement.close();
             }
@@ -89,8 +90,7 @@ public class NetezzaConnector {
         try {
             Class.forName(NETEZZA_DB_DRIVER);
         } catch (ClassNotFoundException e) {
-            success = false;
-            System.out.println(e.getMessage());
+            System.out.println("Exception in getDBConnection:" + e.getMessage());
         }
 
         try {
@@ -98,8 +98,7 @@ public class NetezzaConnector {
                     DB_PASSWORD);
             return dbConnection;
         } catch (SQLException e) {
-            success = false;
-            System.out.println(e.getMessage());
+            System.out.println("Exception in getDBConnection:" + e.getMessage());
         }
 
         return dbConnection;
