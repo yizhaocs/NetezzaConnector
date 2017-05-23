@@ -88,8 +88,6 @@ public class FastrackFileProcessor {
             // cloging the last row data
             FastrackFileDao preFastrackFileDao = eventIdToData.get(preEventId);
             out.write(toCKVRAW(preFastrackFileDao));
-            out.write("\n");
-            eventIdToData.remove(preEventId); // delete the old data for not to get out of memory exception
             rowCount++;
         } catch (FileNotFoundException e) {
             System.out.println("Caught FileNotFoundException: " + e.getMessage());
