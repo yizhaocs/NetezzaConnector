@@ -1,6 +1,7 @@
 package com.yizhao.apps; /**
  * Created by yzhao on 5/22/17.
  */
+
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,16 +10,16 @@ import java.sql.Statement;
 
 /**
  * @author YI ZHAO[yizhao.cs@gmail.com]
- *
- * build it:
- *      mvn clean package
- *
- * Run it:
- *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
- *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 0
- *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 1
- *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 2
- *      java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 9
+ *         <p>
+ *         build it:
+ *         mvn clean package
+ *         <p>
+ *         Run it:
+ *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv
+ *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 0
+ *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 1
+ *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 2
+ *         java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv 9
  */
 public class NetezzaConnector {
     private static final String NETEZZA_DB_DRIVER = "org.netezza.Driver";
@@ -28,7 +29,6 @@ public class NetezzaConnector {
     static boolean success = true;
 
     /**
-     *
      * @param argv
      */
     public static void main(String[] argv) {
@@ -46,10 +46,14 @@ public class NetezzaConnector {
 
         String selectTableSQL = null;
 
-        if(partition == null){
-             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' escapechar '\\' remoteSource 'JDBC') as select * from " + table;
-        }else{
-             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' escapechar '\\' remoteSource 'JDBC') as select * from " + table +
+        if (partition == null) {
+            selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' escapechar '\\' remoteSource 'JDBC') as select * from " + table;
+        } else {
+            selectTableSQL = "create external table \'" + outputFilePath + "\'" +
+                    "\n" +
+                    "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
+                    "\n" +
+                    "as select * from " + table +
                     "\n" +
                     "WHERE MOD(" + table + ".EVENT_ID, 10)=" + partition +
                     "\n" +
