@@ -29,18 +29,29 @@ public class NetezzaConnector {
      */
     public static void main(String[] argv) {
         try {
-            selectRecordsFromDbUserTable(argv[0], argv[1]);
+            selectRecordsFromDbUserTable(argv[0], argv[1], argv[2]);
         } catch (Exception e) {
             System.out.println("exception");
         }
     }
 
-    private static void selectRecordsFromDbUserTable(String table, String outputFilePath) throws SQLException {
+    private static void selectRecordsFromDbUserTable(String table, String outputFilePath, String partition) throws SQLException {
 
         Connection dbConnection = null;
         Statement statement = null;
 
-        String selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' remoteSource 'JDBC') as select * from " + table;
+        String selectTableSQL = null;
+
+        if(partition == null){
+             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' remoteSource 'JDBC') as select * from " + table;
+        }else{
+             selectTableSQL = "create external table \'" + outputFilePath + "\' using (delim '|' remoteSource 'JDBC') as select * from " + table +
+                    "\n" +
+                    "WHERE MOD(" + table + ".EVENT_ID, 10)=" + partition +
+                    "\n" +
+                    "ORDER BY " + table + ".EVENT_ID";
+        }
+
 
 
         try {
