@@ -10,9 +10,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+
 /**
+ * Merges EKV raws, then converts and writes to the fastrack file.
  *
- * Generates and Writes the ekv raw into fastrack file
+ *
+ * EKV raw format:
+ *      event_id|key_id|value|cookie_id|dp_id|location_id|modification_ts
+ *      20161497900101|25594|BOS|208642445203|3346|45815|2017-03-15 23:12
+ *      20161497900101|25595|FLL|208642445203|3346|45815|2017-03-15 23:12
+ *
+ * fastrack file format:
+ *      ckvraw|timestamp(seconds)|cookie_id|key1=value1&key2=value2&...keyN=valueN|event_id|dp_id|dp_user_id|location_id|referer_url|domain|user_agent
+ *      ckvraw|2017-03-15 23:12|208642445203|25594=BOS&25595=FLL|20161497900101|3346|null|45815|null|null|null
  *
  * @author YI ZHAO
  */
@@ -23,13 +33,7 @@ public class FastrackFileProcessor {
     }
 
 
-    /**
-     * EKV row format:
-     *      20161497900101|25594|BOS|208642445203|3346|45815|2017-03-15 23:12
-     *      20161497900101|25595|FLL|208642445203|3346|45815|2017-03-15 23:12
-     *
-     * @param inFilePath
-     */
+
     public static void execute(String inFilePath, String fastrackFileOutputPath) {
         Map<String, FastrackFileDao> eventIdToData = new HashMap<String, FastrackFileDao>();
         int rowCount = 0;
