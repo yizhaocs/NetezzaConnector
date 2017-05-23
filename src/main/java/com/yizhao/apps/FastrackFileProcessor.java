@@ -98,7 +98,7 @@ public class FastrackFileProcessor {
         } catch (Exception e) {
             System.out.println("Caught Exception: " + e.getMessage());
         } finally {
-            System.out.print("Total row generated for fastrack is:" + rowCount);
+            System.out.print("Total row generated for fastrack is:" + rowCount + "\n");
             if (s != null) {
                 s.close();
             }

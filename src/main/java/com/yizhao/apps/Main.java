@@ -45,11 +45,13 @@ public class Main {
             }
 
             NetezzaConnector.dataToCsv(table, csvFileOutputPath, partition);
+            System.out.println("done with ekv raws to CSV file \n");
         } catch (Exception e) {
             System.out.println("exception");
         }
 
         FastrackFileProcessor.execute(csvFileOutputPath, fastrackFileOutputPath);
+        System.out.println("done with CSV file to fastrack file\n");
     }
 
 }
