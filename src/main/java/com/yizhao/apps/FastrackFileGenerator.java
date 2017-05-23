@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by yzhao on 5/23/17.
+ * Create the fastrack clog from FastrackFileDao Class
+ *
+ * @author YI ZHAO
  */
 public class FastrackFileGenerator {
 

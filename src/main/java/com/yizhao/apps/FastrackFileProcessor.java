@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * Created by yzhao on 5/23/17.
+ * Reading the ekv raw files to create a map that does even_id -> even_id,kvPair,cookie_id,dp_id,location_id,modification_ts
+ *
+ * @author YI ZHAO
  */
 public class FastrackFileProcessor {
     private static final StrTokenizer st = StrTokenizer.getCSVInstance();

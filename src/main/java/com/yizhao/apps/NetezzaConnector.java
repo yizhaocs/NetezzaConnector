@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Created by yzhao on 5/23/17.
+ * @author YI ZHAO
  */
 public class NetezzaConnector {
     private static final String NETEZZA_DB_DRIVER = "org.netezza.Driver";

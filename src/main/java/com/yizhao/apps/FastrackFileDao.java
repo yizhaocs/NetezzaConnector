@@ -1,7 +1,7 @@
 package com.yizhao.apps;
 
 /**
- * Created by yzhao on 5/23/17.
+ * @author YI ZHAO
  */
 public class FastrackFileDao {
     private String event_id;

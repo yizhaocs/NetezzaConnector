@@ -3,7 +3,7 @@ import java.util.Map;
 
 
 /**
- * @author YI ZHAO[yizhao.cs@gmail.com]
+ * @author YI ZHAO
  *         <p>
  *         build it:
  *              mvn clean package
