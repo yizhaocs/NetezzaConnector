@@ -33,13 +33,13 @@ public class NetezzaConnector {
      */
     public static void main(String[] argv) {
         try {
-            selectRecordsFromDbUserTable(argv[0], argv[1], argv[2]);
+            dataToCsv(argv[0], argv[1], argv[2]);
         } catch (Exception e) {
             System.out.println("exception");
         }
     }
 
-    private static void selectRecordsFromDbUserTable(String table, String outputFilePath, String partition) throws SQLException {
+    private static void dataToCsv(String table, String outputFilePath, String partition) throws SQLException {
 
         Connection dbConnection = null;
         Statement statement = null;
