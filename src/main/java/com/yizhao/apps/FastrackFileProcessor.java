@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * Reading the ekv raw files to create a map that does even_id -> even_id,kvPair,cookie_id,dp_id,location_id,modification_ts
+ *
+ * Generates and Writes the ekv raw into fastrack file
  *
  * @author YI ZHAO
  */
@@ -31,10 +32,15 @@ public class FastrackFileProcessor {
      *
      * @param inFilePath
      */
-    public static Map<String, FastrackFileDao> execute(String inFilePath) {
+    public static void execute(String inFilePath, String fastrackFileOutputPath) {
         Map<String, FastrackFileDao> eventIdToData = new HashMap<String, FastrackFileDao>();
+        int rowCount = 0;
+        String preEventId = null;
+        String curEventId = null;
+        FileWriter out = null;
         Scanner s = null;
         try {
+            out = new FileWriter(fastrackFileOutputPath);
             s = new Scanner(new File(inFilePath));
             while (s.hasNextLine()) {
                 String line = s.nextLine();
@@ -51,25 +57,64 @@ public class FastrackFileProcessor {
                 String location_id = str[5];
                 String modification_ts = str[6];
 
+                // true if read the first row of the file
+                if(preEventId == null && curEventId == null){
+                    preEventId = event_id;
+                    curEventId = event_id;
+                }else{
+                    curEventId = event_id;
+                }
+
                 String kvPair = key_id + "=" + value;
                 if (eventIdToData.containsKey(event_id)) {
                     FastrackFileDao tmpFastrackFileDao = eventIdToData.get(event_id);
                     tmpFastrackFileDao.setKvPair(tmpFastrackFileDao.getKvPair() + "&" + kvPair);
                 } else {
-                    FastrackFileDao mFastrackFileDao = new FastrackFileDao(event_id, kvPair, cookie_id, dp_id, location_id, modification_ts);
-                    eventIdToData.put(event_id, mFastrackFileDao);
+                    FastrackFileDao curFastrackFileDao = new FastrackFileDao(event_id, kvPair, cookie_id, dp_id, location_id, modification_ts);
+                    eventIdToData.put(event_id, curFastrackFileDao);
+
+                    // true if start with new event_id, so we cloging the old one in to fastrack file
+                    if(preEventId.equals(curEventId) == false) {
+                        FastrackFileDao preFastrackFileDao = eventIdToData.get(preEventId);
+                        out.write(toCKVRAW(preFastrackFileDao));
+                        out.write("\n");
+                        eventIdToData.remove(preEventId); // delete the old data for not to get out of memory exception
+                        rowCount++;
+                    }
                 }
+                preEventId = curEventId;
             }
+
+            // cloging the last row data
+            FastrackFileDao preFastrackFileDao = eventIdToData.get(preEventId);
+            out.write(toCKVRAW(preFastrackFileDao));
+            out.write("\n");
+            eventIdToData.remove(preEventId); // delete the old data for not to get out of memory exception
+            rowCount++;
         } catch (FileNotFoundException e) {
             System.out.println("Caught FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("Caught IOException: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Caught Exception: " + e.getMessage());
         } finally {
-            System.out.print("eventIdToData.size:" + eventIdToData.size());
+            System.out.print("Total row generated for fastrack is:" + rowCount);
             if (s != null) {
                 s.close();
             }
+
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            }catch (IOException e){
+                System.out.println("Caught IOException: " + e.getMessage());
+            }
         }
-        return eventIdToData;
+    }
+
+    private static String toCKVRAW(FastrackFileDao mFastrackFileDao){
+        return "ckvraw" + "|" + mFastrackFileDao.getModification_ts() + "|" + mFastrackFileDao.getCookie_id() + "|" + mFastrackFileDao.getKvPair() + "|" + mFastrackFileDao.getEvent_id() + "|" + mFastrackFileDao.getDp_id() +  "|" + "null" + "|" + mFastrackFileDao.getLocation_id() +  "|" + "null" +  "|" + "null" +  "|" + "null";
+
     }
 }

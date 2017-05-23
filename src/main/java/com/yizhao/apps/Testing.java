@@ -7,7 +7,6 @@ import java.util.Map;
  */
 public class Testing {
     public static void main(String[] args){
-        Map<String, FastrackFileDao> eventIdToData =  FastrackFileProcessor.execute("/Users/yzhao/Desktop/test.txt");
-        FastrackFileGenerator.execute(eventIdToData, "/Users/yzhao/Desktop/result.txt");
+        FastrackFileProcessor.execute("/Users/yzhao/Desktop/test.txt", "/Users/yzhao/Desktop/result.txt");
     }
 }

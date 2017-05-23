@@ -49,8 +49,7 @@ public class Main {
             System.out.println("exception");
         }
 
-        Map<String, FastrackFileDao> eventIdToData =  FastrackFileProcessor.execute(csvFileOutputPath);
-        FastrackFileGenerator.execute(eventIdToData, fastrackFileOutputPath);
+        FastrackFileProcessor.execute(csvFileOutputPath, fastrackFileOutputPath);
     }
 
 }

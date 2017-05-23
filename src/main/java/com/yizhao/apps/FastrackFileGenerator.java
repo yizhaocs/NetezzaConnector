@@ -18,6 +18,7 @@ public class FastrackFileGenerator {
      * @param eventIdToData
      * @return
      */
+    @Deprecated
     public static void execute(Map<String, FastrackFileDao> eventIdToData, String fastrackFileOutputPath) {
         FileWriter out = null;
         try {
