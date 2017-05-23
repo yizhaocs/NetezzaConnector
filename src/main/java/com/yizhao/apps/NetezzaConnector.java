@@ -56,8 +56,6 @@ public class NetezzaConnector {
                     "ORDER BY " + table + ".EVENT_ID";
         }
 
-
-
         try {
             dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
@@ -66,14 +64,11 @@ public class NetezzaConnector {
 
             // execute select SQL stetement
             success = statement.execute(selectTableSQL);
-
-
         } catch (SQLException e) {
             success = false;
             System.out.println(e.getMessage());
 
         } finally {
-
             System.out.println("table dump success = " + success);
             if (statement != null) {
                 statement.close();
@@ -82,9 +77,7 @@ public class NetezzaConnector {
             if (dbConnection != null) {
                 dbConnection.close();
             }
-
         }
-
     }
 
     private static Connection getDBConnection() {
