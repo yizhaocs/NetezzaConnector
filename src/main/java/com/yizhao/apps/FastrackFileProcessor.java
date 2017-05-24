@@ -20,17 +20,20 @@ import java.util.Scanner;
  *
  * EKV raw format:
  *      event_id|key_id|value|cookie_id|dp_id|location_id|modification_ts
- *      20161497900101|25594|BOS|208642445203|3346|45815|2017-03-15 23:12
- *      20161497900101|25595|FLL|208642445203|3346|45815|2017-03-15 23:12
+ *      3077146869351|16491|2120|305402241992|2120|1522861|2017-02-09 10:25:38
+ *      3077146869351|17647|roomguru|305402241992|2120|1522861|2017-02-09 10:25:38
+ *      3077146869351|17398|hm|305402241992|2120|1522861|2017-02-09 10:25:38
+ *
  *
  * fastrack file format:
  *      ckvraw|timestamp(seconds)|cookie_id|key1=value1&key2=value2&...keyN=valueN|event_id|dp_id|dp_user_id|location_id|referer_url|domain|user_agent
- *      ckvraw|2017-03-15 23:12|208642445203|25594=BOS&25595=FLL|20161497900101|3346|null|45815|null|null|null
+ *      ckvraw|1486664738|305402241992|16491=2120&17647=roomguru&17398=hm|3077146869351|2120|null|1522861|null|null|null
  *
  * @author YI ZHAO
  */
 public class FastrackFileProcessor {
     private static final StrTokenizer st = StrTokenizer.getCSVInstance();
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     static {
         st.setDelimiterChar('|');
     }
@@ -62,7 +65,7 @@ public class FastrackFileProcessor {
                 String location_id = str[5];
                 String modification_ts = str[6];
                 // 2017-03-15 23:04:35
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
                 Date date = dateFormat.parse(modification_ts );
                 long modification_ts_unixTime = (long) date.getTime()/1000;
                 // true if read the first row of the file
