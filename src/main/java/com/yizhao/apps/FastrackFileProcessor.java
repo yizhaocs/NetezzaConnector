@@ -70,9 +70,15 @@ public class FastrackFileProcessor {
                 try{
                     date = dateFormat.parse(modification_ts);
                 }catch(Exception e){
-                    // for some cases, the seconds[ss] is missing, so we take care inside the catch block
-                    DateFormat dateFormatTmp = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                    date = dateFormatTmp.parse(modification_ts);
+                        // for some cases, the seconds[ss] is missing, so we take care inside the catch block
+                        DateFormat dateFormatTmp = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    try{
+                        date = dateFormatTmp.parse(modification_ts);
+                    }catch(Exception e2){
+                        System.out.println("error data format event_id:" + event_id + " ,modification_ts:" + modification_ts + "\n");
+                        System.out.println("Exception in FastrackFileProcessor:" + "\n");
+                        e2.printStackTrace();
+                    }
                 }
                 long modification_ts_unixTime = date.getTime()/1000;
                 // true if read the first row of the file
