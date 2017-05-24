@@ -20,23 +20,15 @@ public class NetezzaConnector {
 
         String selectTableSQL = null;
 
-        if (partition == null) {
-            selectTableSQL = "create external table \'" + csvFileOutputPath + "\'" +
-                    "\n" +
-                    "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
-                    "\n" +
-                    "as select * from " + table;
-        } else {
-            selectTableSQL = "create external table \'" + csvFileOutputPath + "\'" +
-                    "\n" +
-                    "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
-                    "\n" +
-                    "as select * from " + table +
-                    "\n" +
-                    "WHERE MOD(" + table + ".EVENT_ID, 10)=" + partition +
-                    "\n" +
-                    "ORDER BY " + table + ".EVENT_ID";
-        }
+        selectTableSQL = "create external table \'" + csvFileOutputPath + "\'" +
+                "\n" +
+                "using (delim '|' escapechar '\\' remoteSource 'JDBC')" +
+                "\n" +
+                "as select * from " + table +
+                "\n" +
+                "WHERE MOD(" + table + ".EVENT_ID, 10)=" + partition +
+                "\n" +
+                "ORDER BY " + table + ".EVENT_ID" + " LIMIT 100";
 
         try {
             dbConnection = getDBConnection();
@@ -47,7 +39,8 @@ public class NetezzaConnector {
             // execute select SQL stetement
             statement.execute(selectTableSQL);
         } catch (SQLException e) {
-            System.out.println("Exception in dataToCsv:" + e.getMessage());
+            System.out.println("Exception in NetezzaConnector:" + "\n");
+            e.printStackTrace();
 
         } finally {
             if (statement != null) {
@@ -66,7 +59,8 @@ public class NetezzaConnector {
         try {
             Class.forName(NETEZZA_DB_DRIVER);
         } catch (ClassNotFoundException e) {
-            System.out.println("Exception in getDBConnection:" + e.getMessage());
+            System.out.println("Exception in NetezzaConnector:" + "\n");
+            e.printStackTrace();
         }
 
         try {
@@ -74,7 +68,8 @@ public class NetezzaConnector {
                     DB_PASSWORD);
             return dbConnection;
         } catch (SQLException e) {
-            System.out.println("Exception in getDBConnection:" + e.getMessage());
+            System.out.println("Exception in NetezzaConnector:" + "\n");
+            e.printStackTrace();
         }
 
         return dbConnection;
@@ -97,7 +92,7 @@ public class NetezzaConnector {
 //            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace","om", "N3wQA3ra.");
 
         } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console");
+            System.out.println("Exception in NetezzaConnector:" + "\n");
             e.printStackTrace();
             return;
         }

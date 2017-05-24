@@ -101,11 +101,14 @@ public class FastrackFileProcessor {
             out.write(toCKVRAW(preFastrackFileDao));
             rowCount++;
         } catch (FileNotFoundException e) {
-            System.out.println("Caught FileNotFoundException: " + e.getMessage());
+            System.out.println("Exception in FastrackFileProcessor:" + "\n");
+            e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Caught IOException: " + e.getMessage());
+            System.out.println("Exception in FastrackFileProcessor:" + "\n");
+            e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Caught Exception: " + e.getMessage());
+            System.out.println("Exception in FastrackFileProcessor:" + "\n");
+            e.printStackTrace();
         } finally {
             System.out.print("Total row generated for fastrack is:" + rowCount + "\n");
             if (s != null) {

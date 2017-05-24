@@ -1,5 +1,9 @@
 package com.yizhao.apps;
-import java.util.Map;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 /**
@@ -9,49 +13,65 @@ import java.util.Map;
  *              mvn clean package
  *         <p>
  *         Run it:
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv
- *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 0
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac
+ *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac  0
  *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 1
  *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 2
  *              java -jar NetezzaConnector-jar-with-dependencies.jar eng759_backfill_apac /workplace/yzhao/eng759_backfill_apac.csv /workplace/yzhao/apac_fastrack.csv 9
  */
 public class Main {
+    private static final String DEFAULT_FILE_PATH = "/workplace/yzhao/";
     /**
      * @param argv
      */
     public static void main(String[] argv) {
         String table = null;
-        String csvFileOutputPath = null;
-        String fastrackFileOutputPath = null;
+
         String partition = null;
         try {
              table = argv[0];
-             csvFileOutputPath = argv[1];
-             fastrackFileOutputPath = argv[2];
-             partition = argv[3];
+            if(argv.length == 2) {
+                partition = argv[1];
+            }
 
             if(table == null){
                 System.out.println("argument 1 is missing for table name");
                 return;
             }
 
-            if(csvFileOutputPath == null){
-                System.out.println("argument 2 is missing for csv file output path");
-                return;
-            }
-            if(fastrackFileOutputPath == null){
-                System.out.println("argument 3 is missing for fastrack file output path");
-                return;
+            String csvFileOutputPath = DEFAULT_FILE_PATH + table + "_csvFileOutputPath.csv";
+            String fastrackFileOutputPath = DEFAULT_FILE_PATH + table + "_fastrackFileOutputPath";
+
+            if(partition == null){
+                int i = 0;
+                while(i < 10){
+                    NetezzaConnector.dataToCsv(table, csvFileOutputPath, String.valueOf(i));
+                    System.out.println("done with ekv raws to CSV file \n");
+                    FastrackFileProcessor.execute(csvFileOutputPath, fastrackFileOutputPath + "_" + i + ".csv");
+                    System.out.println("done with CSV file to fastrack file\n");
+                    File f = new File(csvFileOutputPath);
+                    if(f.delete()){
+                        System.out.println(csvFileOutputPath + " has deleted" + "\n");
+                    }else{
+                        System.out.println(csvFileOutputPath + " has failed to delete" + "\n");
+                    }
+
+                    i++;
+                }
+            }else{
+                NetezzaConnector.dataToCsv(table, csvFileOutputPath, partition);
+                System.out.println("done with ekv raws to CSV file \n");
+                FastrackFileProcessor.execute(csvFileOutputPath, fastrackFileOutputPath );
+                System.out.println("done with CSV file to fastrack file\n");
             }
 
-            NetezzaConnector.dataToCsv(table, csvFileOutputPath, partition);
-            System.out.println("done with ekv raws to CSV file \n");
+
         } catch (Exception e) {
-            System.out.println("exception");
+            System.out.println("Exception in Main:" + "\n");
+            e.printStackTrace();
         }
 
-        FastrackFileProcessor.execute(csvFileOutputPath, fastrackFileOutputPath);
-        System.out.println("done with CSV file to fastrack file\n");
+
     }
 
 }
