@@ -18,19 +18,21 @@
 
 
     <dependencies>
+        <!-- this is for "JDBC" -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.0.8</version>
         </dependency>
 
+        <!-- this is for "NETEZZA connection" -->
         <dependency>
             <groupId>netezza</groupId>
             <artifactId>nzjdbc3</artifactId>
             <version>7.0.2.11P2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <!-- this is for "StrTokenizer" -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
