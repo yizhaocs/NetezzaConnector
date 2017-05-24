@@ -66,8 +66,15 @@ public class FastrackFileProcessor {
                 String modification_ts = str[6];
                 // 2017-03-15 23:04:35
 
-                Date date = dateFormat.parse(modification_ts );
-                long modification_ts_unixTime = (long) date.getTime()/1000;
+                Date date = null;
+                try{
+                    date = dateFormat.parse(modification_ts);
+                }catch(Exception e){
+                    // for some cases, the seconds[ss] is missing, so we take care inside the catch block
+                    DateFormat dateFormatTmp = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    date = dateFormatTmp.parse(modification_ts);
+                }
+                long modification_ts_unixTime = date.getTime()/1000;
                 // true if read the first row of the file
                 if(preEventId == null && curEventId == null){
                     preEventId = event_id;
