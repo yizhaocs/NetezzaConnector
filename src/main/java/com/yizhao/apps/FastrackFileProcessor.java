@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -58,7 +61,10 @@ public class FastrackFileProcessor {
                 String dp_id = str[4];
                 String location_id = str[5];
                 String modification_ts = str[6];
-
+                // 2017-03-15 23:04:35
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Date date = dateFormat.parse(modification_ts );
+                long modification_ts_unixTime = (long) date.getTime()/1000;
                 // true if read the first row of the file
                 if(preEventId == null && curEventId == null){
                     preEventId = event_id;
@@ -72,7 +78,7 @@ public class FastrackFileProcessor {
                     FastrackFileDao tmpFastrackFileDao = eventIdToData.get(event_id);
                     tmpFastrackFileDao.setKvPair(tmpFastrackFileDao.getKvPair() + "&" + kvPair);
                 } else {
-                    FastrackFileDao curFastrackFileDao = new FastrackFileDao(event_id, kvPair, cookie_id, dp_id, location_id, modification_ts);
+                    FastrackFileDao curFastrackFileDao = new FastrackFileDao(event_id, kvPair, cookie_id, dp_id, location_id, String.valueOf(modification_ts_unixTime));
                     eventIdToData.put(event_id, curFastrackFileDao);
 
                     // true if start with new event_id, so we cloging the old one in to fastrack file
