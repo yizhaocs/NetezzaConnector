@@ -1,4 +1,4 @@
-package com.yizhao.apps;
+package com.yizhao.apps.Connector;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

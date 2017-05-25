@@ -1,5 +1,7 @@
 package com.yizhao.apps;
 
+import com.yizhao.apps.Connector.NetezzaConnector;
+
 import java.util.Map;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Map;
         ckvraw|1486664739|305494389375|19816=2479|3077146867791|2479|null|1682191|null|null|null
  */
 public class Testing {
-    public static void main(String[] args){
-        FastrackFileProcessor.execute("/Users/yzhao/Desktop/test.txt", "/Users/yzhao/Desktop/result.txt");
+    public static void main(String[] args) {
+        NetezzaConnector.connectionTesting();
     }
 }
